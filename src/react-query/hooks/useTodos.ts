@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { CACHE_KEY_TODOS } from "../constants";
+import APIClient from "../services/apiClient";
+
+const apiClient = new APIClient<Todo>("/todos");
 
 export interface Todo {
   id: number;
@@ -10,20 +13,9 @@ export interface Todo {
 }
 
 const useTodos = () => {
-  const fetchTodos = async () => {
-    try {
-      const response = await axios.get<Todo[]>(
-        "https://jsonplaceholder.typicode.com/todos"
-      );
-      return response.data;
-    } catch (error) {
-      throw error as AxiosError; // Make error type more specific
-    }
-  };
-
   return useQuery<Todo[], AxiosError>({
     queryKey: CACHE_KEY_TODOS,
-    queryFn: fetchTodos,
+    queryFn: apiClient.getAll,
     staleTime: 10 * 1000,
     // initialData: [],
   });

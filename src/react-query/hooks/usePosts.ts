@@ -17,7 +17,7 @@ const usePosts = (query: PostQuery) =>
     queryKey: ["posts", query],
     queryFn: ({ pageParam = 1 }) =>
       axios
-        .get("https://jsonplaceholder.typicode.com/posts", {
+        .get("/posts", {
           params: {
             _start: (pageParam - 1) * query.pageSize,
             _limit: query.pageSize,
